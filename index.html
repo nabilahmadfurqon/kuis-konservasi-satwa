@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Konservasi Satwa Nusantara</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Fraunces"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            canvas: '#f3efe6',
+            paper: '#fbf9f5',
+            forest: {
+              DEFAULT: '#183328',
+              light: '#234839',
+              dark: '#0f221a',
+              muted: '#e4ece7'
+            },
+            accent: {
+              DEFAULT: '#c25934',
+              light: '#faede8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #f3efe6;
+      background-image: radial-gradient(#d5cfc2 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    progress {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background-color: #e2dcd0;
+    }
+    progress::-webkit-progress-bar {
+      background-color: #e2dcd0;
+      border-radius: 999px;
+    }
+    progress::-webkit-progress-value {
+      background-color: #183328;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    progress::-moz-progress-bar {
+      background-color: #183328;
+      border-radius: 999px;
+    }
+
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .specimen-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 0 #d8d1c2, 0 12px 24px -8px rgba(24, 51, 40, 0.08);
+    }
+    .specimen-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #cfc7b6, 0 18px 30px -8px rgba(24, 51, 40, 0.13);
+    }
+
+    .panel-card {
+      box-shadow: 0 4px 0 #d8d1c2, 0 10px 20px -6px rgba(24, 51, 40, 0.07);
+    }
+
+    dialog::backdrop {
+      background: rgba(15, 34, 26, 0.65);
+      backdrop-filter: blur(2px);
+    }
+  </style>
+</head>
+<body class="text-stone-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="bg-paper/95 backdrop-blur border-b-2 border-stone-300 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <a href="#" class="font-display text-lg sm:text-xl font-bold text-forest tracking-tight">
+        Kuis Konservasi Satwa Nusantara
+      </a>
+
+      <nav aria-label="Navigasi Halaman" class="hidden md:flex items-center gap-7 text-sm font-semibold text-stone-600">
+        <a href="#lembar-peserta" class="hover:text-forest transition-colors">Lembar Peserta</a>
+        <a href="#daftar-soal" class="hover:text-forest transition-colors">Daftar Soal</a>
+        <a href="#riwayat-panel" class="hover:text-forest transition-colors">Riwayat Nilai</a>
+      </nav>
+
+      <div class="flex items-center gap-2 bg-forest text-white px-3.5 py-1.5 rounded-lg text-xs font-medium">
+        <span class="text-stone-300">Durasi</span>
+        <time id="timer-display" datetime="PT0M0S" class="font-mono font-bold text-amber-300 text-sm">00:00</time>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full flex-grow">
+
+    <!-- Hero Banner -->
+    <section class="bg-forest text-paper rounded-2xl p-6 sm:p-8 mb-8 border-2 border-forest-dark relative overflow-hidden shadow-lg">
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <h2 class="font-display text-2xl sm:text-4xl font-bold leading-tight text-white mb-2">
+            Eksplorasi Fauna Endemik &amp; Ekosistem Kepulauan Indonesia
+          </h2>
+          <p class="text-stone-300 text-sm sm:text-base leading-relaxed">
+            Lengkapi data peserta pada lembar jawab, lalu pilih satu jawaban yang paling tepat pada enam kartu soal di bawah ini.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-3 flex-shrink-0">
+          <div class="bg-forest-light/80 border border-white/15 rounded-xl px-3.5 py-2.5 text-center">
+            <span class="font-mono text-lg sm:text-xl font-bold text-amber-300 block">06</span>
+            <span class="text-[11px] text-stone-300">Butir Soal</span>
+          </div>
+          <div class="bg-forest-light/80 border border-white/15 rounded-xl px-3.5 py-2.5 text-center">
+            <span class="font-mono text-lg sm:text-xl font-bold text-amber-300 block">70</span>
+            <span class="text-[11px] text-stone-300">Batas Lulus</span>
+          </div>
+          <div class="bg-forest-light/80 border border-white/15 rounded-xl px-3.5 py-2.5 text-center">
+            <span class="font-mono text-lg sm:text-xl font-bold text-amber-300 block">A-D</span>
+            <span class="text-[11px] text-stone-300">Pilihan Opsi</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout Utama: Kiri Soal (8 kolom), Kanan Lembar Jawab Sticky (4 kolom) -->
+    <div class="grid lg:grid-cols-12 gap-7 items-start">
+
+      <!-- Kolom Kiri: Form & Kartu Soal -->
+      <section id="daftar-soal" aria-label="Daftar Soal Kuis" class="lg:col-span-8 order-2 lg:order-1">
+        <form id="quiz-form" class="space-y-7" novalidate>
+
+          <!-- ================= KARTU SOAL 1 ================= -->
+          <article id="soal-q1" data-question="q1" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 01
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Komodo <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Varanus komodoensis)</span>
+                </h3>
+              </div>
+              <span id="badge-q1" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <!-- Grid Kiri Gambar, Kanan Soal & Jawaban (Turun ke bawah saat mobile) -->
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/komodo.jpg"
+                       onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/7/7a/Komodo_Dragon_Varanus_komodoensis_%287880640390%29.jpg';"
+                       alt="Komodo di Taman Nasional Komodo"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Sabana &amp; hutan musim Nusa Tenggara Timur</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 8&deg;33'S 119&deg;29'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Berdasarkan sebaran geografisnya, di pulau mana sajakah populasi alami komodo dapat ditemukan?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q1" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Hutan hujan dataran rendah Pulau Jawa dan Bali.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q1" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Pulau Komodo, Rinca, Flores, Gili Motang, dan Gili Dasami.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q1" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Kepulauan Maluku Utara, Halmahera, dan Pulau Seram.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q1" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Padang sabana terbuka di bagian selatan Pulau Papua.</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q1" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 01</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: B. Pulau Komodo, Rinca, Flores, Gili Motang, dan Gili Dasami.
+                    </p>
+                    <p>
+                      Habitat asli <em>Varanus komodoensis</em> hanya berada di kepulauan Nusa Tenggara Timur, terutama di kawasan Taman Nasional Komodo dan sebagian pesisir Pulau Flores.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= KARTU SOAL 2 ================= -->
+          <article id="soal-q2" data-question="q2" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 02
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Harimau Sumatra <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Panthera tigris sumatrae)</span>
+                </h3>
+              </div>
+              <span id="badge-q2" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/harimau-sumatra.jpg"
+                       onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/6/66/Osnabr%C3%BCck_-_Zoo_-_Panthera_Tigris_Sumatrae_01.jpg';"
+                       alt="Harimau Sumatra"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Hutan hujan pegunungan &amp; dataran rendah Sumatra</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 3&deg;30'N 97&deg;30'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Manakah pernyataan yang tepat mengenai ciri fisik dan status Harimau Sumatra dibandingkan subspesies lainnya?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q2" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Memiliki ukuran tubuh paling besar dibanding harimau daratan Asia.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q2" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Subspesies harimau terkecil yang masih hidup, berwarna lebih gelap dengan loreng rapat.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q2" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Hidup berdampingan dengan Harimau Jawa yang masih bertahan di Banten.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q2" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Satwa hasil introduksi dari Semenanjung Malaya pada abad ke-19.</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q2" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 02</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: B. Subspesies harimau terkecil yang masih hidup, berwarna lebih gelap dengan loreng rapat.
+                    </p>
+                    <p>
+                      Setelah Harimau Bali dan Harimau Jawa punah, Harimau Sumatra menjadi satu-satunya subspesies harimau di Indonesia. Tubuhnya yang lebih ringkas memudahkan pergerakan di hutan tropis yang rapat.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= KARTU SOAL 3 ================= -->
+          <article id="soal-q3" data-question="q3" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 03
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Orangutan Kalimantan <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Pongo pygmaeus)</span>
+                </h3>
+              </div>
+              <span id="badge-q3" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/orangutan.jpg"
+                       onerror="this.onerror=null;this.src='https://cdn.britannica.com/69/65969-004-9199424F/Orangutan.jpg';"
+                       alt="Orangutan Kalimantan"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Kanopi hutan hujan &amp; rawa gambut Kalimantan</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 2&deg;45'S 111&deg;55'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Mengapa orangutan sering dijuluki sebagai "Petani Hutan" bagi keberlangsungan ekosistem hutan tropis?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q3" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Menyebarkan biji buah-buahan lewat kotorannya di area jelajah yang luas.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q3" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Mengubur cadangan umbi-umbian di tanah gambut saat musim kemarau.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q3" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Memangsa serangga hama perusak batang kayu pepohonan kanopi.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q3" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Membantu penyerbukan bunga raflesia di dasar lantai hutan.</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q3" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 03</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: A. Menyebarkan biji buah-buahan lewat kotorannya di area jelajah yang luas.
+                    </p>
+                    <p>
+                      Sebagai pemakan buah (frugivora), orangutan menelan biji buah dan menyebarkannya melalui kotoran ke berbagai penjuru hutan sehingga memicu regenerasi pohon-pohon baru.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= KARTU SOAL 4 ================= -->
+          <article id="soal-q4" data-question="q4" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 04
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Badak Jawa <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Rhinoceros sondaicus)</span>
+                </h3>
+              </div>
+              <span id="badge-q4" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/badak-jawa.jpg"
+                       onerror="this.onerror=null;this.src='https://i0.wp.com/palmoildetectives.com/wp-content/uploads/2021/01/javanese-rhinoceros-sondaicus.jpeg?resize=750,422&ssl=1';"
+                       alt="Badak Jawa di Taman Nasional Ujung Kulon"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Hutan hujan dataran rendah Semenanjung Ujung Kulon</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 6&deg;45'S 105&deg;20'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Di manakah satu-satunya habitat alami Badak Jawa saat ini, dan apa ciri fisik utamanya?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q4" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Taman Nasional Way Kambas; bercula dua dan berambut kasar.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q4" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Taman Nasional Ujung Kulon; bercula satu dan memiliki lipatan kulit tebal.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q4" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Taman Nasional Baluran; bercula dua panjang dan hidup di sabana.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q4" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Taman Nasional Alas Purwo; tidak memiliki cula sama sekali.</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q4" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 04</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: B. Taman Nasional Ujung Kulon; bercula satu dan memiliki lipatan kulit tebal.
+                    </p>
+                    <p>
+                      Berbeda dengan Badak Sumatra yang bercula dua, Badak Jawa hanya memiliki satu cula dan lipatan kulit yang tampak seperti perisai. Seluruh populasi liarnya kini hanya tersisa di Ujung Kulon, Banten.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= KARTU SOAL 5 ================= -->
+          <article id="soal-q5" data-question="q5" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 05
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Jalak Bali <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Leucopsar rothschildi)</span>
+                </h3>
+              </div>
+              <span id="badge-q5" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/jalak-bali.jpg"
+                       onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/4/4b/Balistar_%28Leucopsar_rothschildi%29_01.jpg';"
+                       alt="Burung Jalak Bali"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Hutan musim Taman Nasional Bali Barat</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 8&deg;08'S 114&deg;28'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Apa penyebab utama menurunnya populasi Jalak Bali di habitat aslinya?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q5" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Perburuan liar untuk perdagangan burung peliharaan dan berkurangnya luas hutan.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q5" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Ketidakmampuan berkembang biak di luar ekosistem hutan bakau.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q5" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Perubahan suhu air laut di sekitar perairan Selat Bali.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q5" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Hilangnya satu-satunya spesies anggrek yang menjadi sumber pakannya.</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q5" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 05</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: A. Perburuan liar untuk perdagangan burung peliharaan dan berkurangnya luas hutan.
+                    </p>
+                    <p>
+                      Warna bulu putih bersih dan kicauannya membuat Jalak Bali banyak diburu secara ilegal. Saat ini populasinya dipulihkan lewat program penangkaran dan pelepasliaran di Taman Nasional Bali Barat.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= KARTU SOAL 6 ================= -->
+          <article id="soal-q6" data-question="q6" class="specimen-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+            <header class="bg-stone-900 text-white px-5 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold bg-amber-400 text-stone-950 px-2.5 py-1 rounded">
+                  NO. 06
+                </span>
+                <h3 class="text-sm sm:text-base font-bold leading-snug">
+                  Bekantan <span class="font-normal italic text-stone-300 text-xs sm:text-sm">(Nasalis larvatus)</span>
+                </h3>
+              </div>
+              <span id="badge-q6" class="font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded">
+                Belum dijawab
+              </span>
+            </header>
+
+            <div class="grid md:grid-cols-12">
+              <figure class="md:col-span-5 bg-stone-900 border-b-2 md:border-b-0 md:border-r-2 border-stone-300 flex flex-col justify-between">
+                <div class="relative flex-grow overflow-hidden min-h-[220px]">
+                  <img src="img/bekantan.jpg"
+                       onerror="this.onerror=null;this.src='https://media-cdn.tripadvisor.com/media/photo-o/15/9b/1d/97/the-proboscis-monkey.jpg';"
+                       alt="Bekantan di pohon mangrove"
+                       loading="lazy"
+                       class="w-full h-60 md:h-full md:absolute md:inset-0 object-cover">
+                </div>
+                <figcaption class="bg-stone-900 text-stone-200 px-4 py-3 text-xs border-t border-white/10 space-y-1">
+                  <span class="block text-stone-300">Hutan bakau &amp; tepi sungai Kalimantan</span>
+                  <span class="font-mono text-[11px] text-amber-300 block">Koordinat: 3&deg;20'S 114&deg;35'E</span>
+                </figcaption>
+              </figure>
+
+              <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                <fieldset>
+                  <legend class="text-sm sm:text-base font-bold text-stone-900 leading-snug mb-3.5">
+                    Adaptasi fisik apa yang dimiliki Bekantan untuk menunjang hidupnya di hutan mangrove dan tepi sungai?
+                  </legend>
+
+                  <div class="space-y-2.5">
+                    <label data-option="a" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q6" value="a" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">A</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Ekor yang dapat menggantung seluruh bobot tubuhnya saat tidur.</span>
+                    </label>
+
+                    <label data-option="b" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q6" value="b" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">B</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Selaput di sela jari kaki untuk berenang dan lambung khusus pencerna daun bakau.</span>
+                    </label>
+
+                    <label data-option="c" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q6" value="c" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">C</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Kantung pipi besar untuk menyimpan ikan kecil saat menyelam.</span>
+                    </label>
+
+                    <label data-option="d" class="option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all">
+                      <input type="radio" name="q6" value="d" class="sr-only">
+                      <span class="opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest">D</span>
+                      <span class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">Kemampuan aktif berburu serangga pada malam hari (nokturnal).</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <details id="details-q6" class="mt-4 bg-stone-100 border border-stone-300 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-200/70">
+                    <span>Pembahasan Soal 06</span>
+                    <span class="lock-indicator font-mono text-[11px] text-stone-500">Terkunci</span>
+                  </summary>
+                  <div class="p-3.5 text-xs text-stone-700 border-t border-stone-300 bg-white leading-relaxed">
+                    <p class="font-bold text-forest mb-1">
+                      Kunci Jawaban: B. Selaput di sela jari kaki untuk berenang dan lambung khusus pencerna daun bakau.
+                    </p>
+                    <p>
+                      Bekantan pandai berenang menyeberangi sungai karena memiliki selaput pada jari kakinya. Lambungnya juga memiliki bakteri simbiotik untuk mencerna daun bakau yang berserat tinggi.
+                    </p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </article>
+
+          <div id="form-warning" class="hidden bg-amber-100 border-2 border-amber-500 text-amber-950 rounded-xl p-4 text-xs sm:text-sm font-semibold"></div>
+
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button type="submit" id="btn-submit" class="flex-1 bg-forest hover:bg-forest-light text-white font-bold py-3.5 px-6 rounded-xl transition-colors text-sm shadow-md">
+              Kumpulkan Lembar Jawab
+            </button>
+            <button type="reset" id="btn-reset" class="sm:w-auto bg-paper hover:bg-stone-200 text-stone-800 font-bold py-3.5 px-6 rounded-xl border-2 border-stone-300 transition-colors text-sm">
+              Reset Jawaban
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Kolom Kanan: Kartu Peserta & LJK Digital Sticky (<aside>) -->
+      <aside id="lembar-peserta" aria-label="Lembar Jawab dan Riwayat" class="lg:col-span-4 space-y-6 lg:sticky lg:top-20 order-1 lg:order-2">
+
+        <!-- Kartu LJK & Identitas Peserta -->
+        <div class="panel-card bg-paper border-2 border-stone-300 rounded-2xl overflow-hidden">
+          <div class="bg-forest text-white px-5 py-3.5 flex items-center justify-between">
+            <h3 class="font-display text-base font-bold">Lembar Jawab Peserta</h3>
+            <span class="font-mono text-[11px] bg-white/15 px-2 py-0.5 rounded">LJK-01</span>
+          </div>
+
+          <div class="p-5">
+            <!-- Input Identitas -->
+            <div class="space-y-3 pb-5 border-b-2 border-dashed border-stone-300">
+              <div>
+                <label for="input-nama" class="block text-xs font-bold text-stone-700 mb-1">
+                  Nama Lengkap <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="input-nama" placeholder="Masukkan nama lengkap" required
+                       class="w-full px-3 py-2 text-sm bg-white border-2 border-stone-300 rounded-lg focus:outline-none focus:border-forest">
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="input-nim" class="block text-xs font-bold text-stone-700 mb-1">
+                    NIM <span class="text-red-600">*</span>
+                  </label>
+                  <input type="text" id="input-nim" placeholder="Nomor induk" required
+                         class="w-full px-3 py-2 text-sm bg-white border-2 border-stone-300 rounded-lg focus:outline-none focus:border-forest">
+                </div>
+                <div>
+                  <label for="input-kelas" class="block text-xs font-bold text-stone-700 mb-1">
+                    Kelas
+                  </label>
+                  <input type="text" id="input-kelas" placeholder="TI-2A"
+                         class="w-full px-3 py-2 text-sm bg-white border-2 border-stone-300 rounded-lg focus:outline-none focus:border-forest">
+                </div>
+              </div>
+            </div>
+
+            <!-- Bar Progres (<progress>) -->
+            <div class="py-4 border-b-2 border-dashed border-stone-300">
+              <div class="flex items-center justify-between mb-2">
+                <label for="quiz-progress" class="text-xs font-bold text-stone-700">
+                  Progres Terjawab
+                </label>
+                <span id="progress-text" class="font-mono text-xs font-bold text-forest">
+                  0 / 6
+                </span>
+              </div>
+              <progress id="quiz-progress" value="0" max="6">0%</progress>
+            </div>
+
+            <!-- Grid Rekaman Jawaban LJK (Nomor 1 - 6) -->
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-2.5">
+                <span class="text-xs font-bold text-stone-700">Rekaman Pilihan Opsi</span>
+                <span class="text-[11px] text-stone-500">Klik untuk lompat</span>
+              </div>
+
+              <div id="nav-nomor-soal" class="grid grid-cols-3 gap-2">
+                <a href="#soal-q1" data-nav="q1" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">01</span>
+                  <span data-slot-val="q1" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+                <a href="#soal-q2" data-nav="q2" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">02</span>
+                  <span data-slot-val="q2" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+                <a href="#soal-q3" data-nav="q3" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">03</span>
+                  <span data-slot-val="q3" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+                <a href="#soal-q4" data-nav="q4" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">04</span>
+                  <span data-slot-val="q4" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+                <a href="#soal-q5" data-nav="q5" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">05</span>
+                  <span data-slot-val="q5" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+                <a href="#soal-q6" data-nav="q6" class="ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors">
+                  <span class="font-mono text-xs font-bold text-stone-500">06</span>
+                  <span data-slot-val="q6" class="font-mono text-xs font-bold text-stone-400">-</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Riwayat Pengerjaan -->
+        <div id="riwayat-panel" class="panel-card bg-paper border-2 border-stone-300 rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-stone-300">
+            <h3 class="font-display text-sm font-bold text-stone-900">Riwayat Nilai</h3>
+            <button type="button" id="btn-hapus-riwayat" class="text-xs font-semibold text-red-700 hover:underline">
+              Hapus
+            </button>
+          </div>
+          <div id="riwayat-container" class="space-y-2 text-xs text-stone-600">
+            <p class="text-stone-400">Belum ada riwayat pengerjaan.</p>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="bg-paper border-t-2 border-stone-300 mt-14 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-stone-600">
+      <p>&copy; 2026 Kuis Konservasi Satwa Nusantara.</p>
+      <address class="not-italic">
+        Kontak: <a href="mailto:info@konservasisatwa.id" class="text-forest font-semibold hover:underline">info@konservasisatwa.id</a>
+      </address>
+    </div>
+  </footer>
+
+  <!-- Modal Hasil Evaluasi (<dialog>) -->
+  <dialog id="evaluation-modal" class="p-0 rounded-2xl shadow-2xl border-2 border-stone-800 w-[92%] max-w-md mx-auto my-auto bg-paper">
+    <div class="overflow-hidden">
+      <div id="modal-header" class="px-6 py-5 bg-forest text-white">
+        <h3 id="modal-title" class="font-display text-lg font-bold">Hasil Evaluasi Kuis</h3>
+        <p id="modal-subtitle" class="text-xs text-stone-200 mt-0.5">Rekapitulasi Lembar Jawab</p>
+      </div>
+
+      <div class="p-6">
+        <div class="bg-white border-2 border-stone-200 rounded-xl p-3.5 mb-4 text-xs space-y-1.5">
+          <div class="flex justify-between">
+            <span class="text-stone-500">Nama:</span>
+            <strong id="modal-nama" class="text-stone-900">-</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-stone-500">NIM:</span>
+            <strong id="modal-nim" class="font-mono text-stone-900">-</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-stone-500">Kelas:</span>
+            <strong id="modal-kelas" class="text-stone-900">-</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-stone-500">Waktu:</span>
+            <strong id="modal-waktu" class="font-mono text-stone-900">00:00</strong>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-center mb-4">
+          <div class="bg-white border-2 border-stone-200 rounded-xl p-3.5">
+            <span class="text-xs text-stone-500 block mb-0.5">Nilai Akhir</span>
+            <span id="score-value" class="font-mono text-3xl font-bold text-stone-900">0</span>
+          </div>
+          <div class="bg-white border-2 border-stone-200 rounded-xl p-3.5">
+            <span class="text-xs text-stone-500 block mb-0.5">Jawaban Benar</span>
+            <span id="correct-count" class="font-mono text-3xl font-bold text-forest">0/6</span>
+          </div>
+        </div>
+
+        <p id="modal-desc" class="text-xs text-stone-600 text-center mb-5 leading-relaxed"></p>
+
+        <div class="flex gap-2.5">
+          <button id="close-modal-btn" type="button" class="flex-1 bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm">
+            Lihat Koreksi Soal
+          </button>
+          <button id="retry-modal-btn" type="button" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold py-3 px-4 rounded-xl text-xs sm:text-sm">
+            Ulangi
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const answerKey = {
+        q1: "b",
+        q2: "b",
+        q3: "a",
+        q4: "b",
+        q5: "a",
+        q6: "b"
+      };
+
+      const totalQuestions = Object.keys(answerKey).length;
+      const STORAGE_KEY = "riwayat_kuis_satwa";
+
+      const form = document.getElementById("quiz-form");
+      const inputNama = document.getElementById("input-nama");
+      const inputNim = document.getElementById("input-nim");
+      const inputKelas = document.getElementById("input-kelas");
+
+      const progressBar = document.getElementById("quiz-progress");
+      const progressText = document.getElementById("progress-text");
+      const timerDisplay = document.getElementById("timer-display");
+      const formWarning = document.getElementById("form-warning");
+      const btnSubmit = document.getElementById("btn-submit");
+
+      const detailsList = document.querySelectorAll("details");
+      const riwayatContainer = document.getElementById("riwayat-container");
+      const btnHapusRiwayat = document.getElementById("btn-hapus-riwayat");
+
+      const modal = document.getElementById("evaluation-modal");
+      const modalHeader = document.getElementById("modal-header");
+      const modalTitle = document.getElementById("modal-title");
+      const modalSubtitle = document.getElementById("modal-subtitle");
+      const modalDesc = document.getElementById("modal-desc");
+      const modalNama = document.getElementById("modal-nama");
+      const modalNim = document.getElementById("modal-nim");
+      const modalKelas = document.getElementById("modal-kelas");
+      const modalWaktu = document.getElementById("modal-waktu");
+      const scoreValue = document.getElementById("score-value");
+      const correctCount = document.getElementById("correct-count");
+      const closeModalBtn = document.getElementById("close-modal-btn");
+      const retryModalBtn = document.getElementById("retry-modal-btn");
+
+      let isSubmitted = false;
+      let secondsElapsed = 0;
+      let timerInterval = null;
+
+      function formatTime(sec) {
+        const mins = Math.floor(sec / 60);
+        const secs = sec % 60;
+        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      }
+
+      function startTimer() {
+        if (timerInterval || isSubmitted) return;
+        timerInterval = setInterval(() => {
+          secondsElapsed++;
+          timerDisplay.textContent = formatTime(secondsElapsed);
+          timerDisplay.setAttribute("datetime", `PT${Math.floor(secondsElapsed / 60)}M${secondsElapsed % 60}S`);
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      detailsList.forEach((det) => {
+        det.addEventListener("toggle", () => {
+          if (!isSubmitted && det.open) {
+            det.open = false;
+            showWarning("Kumpulkan lembar jawab terlebih dahulu untuk membuka pembahasan soal.");
+          }
+        });
+      });
+
+      function showWarning(msg) {
+        formWarning.textContent = msg;
+        formWarning.classList.remove("hidden");
+      }
+
+      function hideWarning() {
+        formWarning.classList.add("hidden");
+        formWarning.textContent = "";
+      }
+
+      inputNama.addEventListener("input", startTimer);
+      inputNim.addEventListener("input", startTimer);
+
+      form.addEventListener("change", () => {
+        if (isSubmitted) return;
+        startTimer();
+        hideWarning();
+
+        const formData = new FormData(form);
+        let answered = 0;
+
+        for (const qId of Object.keys(answerKey)) {
+          const badge = document.getElementById(`badge-${qId}`);
+          const navSlot = document.querySelector(`[data-nav="${qId}"]`);
+          const slotVal = document.querySelector(`[data-slot-val="${qId}"]`);
+          const article = document.getElementById(`soal-${qId}`);
+
+          const labels = article.querySelectorAll(".option-label");
+          labels.forEach((lbl) => {
+            const radio = lbl.querySelector('input[type="radio"]');
+            const keyBox = lbl.querySelector(".opt-key");
+            if (radio.checked) {
+              lbl.classList.add("border-forest", "bg-forest-muted/60");
+              lbl.classList.remove("border-stone-200", "bg-white");
+              keyBox.className = "opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-forest border border-forest text-white flex items-center justify-center flex-shrink-0";
+            } else {
+              lbl.classList.remove("border-forest", "bg-forest-muted/60");
+              lbl.classList.add("border-stone-200", "bg-white");
+              keyBox.className = "opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest";
+            }
+          });
+
+          if (formData.has(qId)) {
+            const picked = formData.get(qId).toUpperCase();
+            answered++;
+            badge.textContent = `Dijawab: ${picked}`;
+            badge.className = "font-mono text-xs font-bold text-amber-300 bg-white/15 px-2.5 py-1 rounded";
+            if (navSlot && slotVal) {
+              navSlot.className = "ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-forest bg-forest text-white transition-colors";
+              slotVal.textContent = picked;
+              slotVal.className = "font-mono text-xs font-bold text-amber-300";
+            }
+          } else {
+            badge.textContent = "Belum dijawab";
+            badge.className = "font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded";
+            if (navSlot && slotVal) {
+              navSlot.className = "ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors";
+              slotVal.textContent = "-";
+              slotVal.className = "font-mono text-xs font-bold text-stone-400";
+            }
+          }
+        }
+
+        progressBar.value = answered;
+        progressText.textContent = `${answered} / ${totalQuestions}`;
+      });
+
+      function renderRiwayat() {
+        let history = [];
+        try {
+          history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (err) {
+          history = [];
+        }
+
+        if (history.length === 0) {
+          riwayatContainer.innerHTML = `<p class="text-stone-400">Belum ada riwayat pengerjaan.</p>`;
+          return;
+        }
+
+        riwayatContainer.innerHTML = history
+          .slice(0, 5)
+          .map((item) => {
+            const lulus = item.score >= 70;
+            return `
+              <div class="p-3 rounded-xl border border-stone-300 bg-white flex items-center justify-between gap-2">
+                <div>
+                  <p class="font-bold text-stone-900">${item.nama}</p>
+                  <p class="font-mono text-[11px] text-stone-500">${item.nim} &bull; ${item.durasi}</p>
+                </div>
+                <div class="text-right">
+                  <span class="font-mono text-sm font-bold px-2 py-0.5 rounded ${lulus ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}">${item.score}</span>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function saveRiwayat(entry) {
+        let history = [];
+        try {
+          history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (err) {
+          history = [];
+        }
+        history.unshift(entry);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 10)));
+        renderRiwayat();
+      }
+
+      btnHapusRiwayat.addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        renderRiwayat();
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (isSubmitted) {
+          modal.showModal();
+          return;
+        }
+
+        const nama = inputNama.value.trim();
+        const nim = inputNim.value.trim();
+        const kelas = inputKelas.value.trim() || "-";
+
+        if (!nama || !nim) {
+          showWarning("Isi Nama Lengkap dan NIM pada Lembar Jawab Peserta terlebih dahulu.");
+          inputNama.focus();
+          return;
+        }
+
+        const formData = new FormData(form);
+        const unansweredList = [];
+
+        for (const [index, qId] of Object.keys(answerKey).entries()) {
+          if (!formData.has(qId)) {
+            unansweredList.push(index + 1);
+          }
+        }
+
+        if (unansweredList.length > 0) {
+          showWarning(`Soal nomor ${unansweredList.join(", ")} belum dijawab.`);
+          const firstUnanswered = document.getElementById(`soal-q${unansweredList[0]}`);
+          if (firstUnanswered) {
+            firstUnanswered.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          return;
+        }
+
+        hideWarning();
+        isSubmitted = true;
+        stopTimer();
+
+        let correct = 0;
+
+        for (const [qId, correctAns] of Object.entries(answerKey)) {
+          const userAns = formData.get(qId);
+          const isRight = userAns === correctAns;
+          if (isRight) correct++;
+
+          const article = document.getElementById(`soal-${qId}`);
+          const badge = document.getElementById(`badge-${qId}`);
+          const navSlot = document.querySelector(`[data-nav="${qId}"]`);
+          const slotVal = document.querySelector(`[data-slot-val="${qId}"]`);
+          const det = document.getElementById(`details-${qId}`);
+
+          if (isRight) {
+            badge.textContent = "Benar";
+            badge.className = "font-mono text-xs font-bold text-emerald-950 bg-emerald-400 px-2.5 py-1 rounded";
+            if (navSlot && slotVal) {
+              navSlot.className = "ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-emerald-700 bg-emerald-600 text-white";
+              slotVal.textContent = `${userAns.toUpperCase()} ✓`;
+              slotVal.className = "font-mono text-xs font-bold text-white";
+            }
+          } else {
+            badge.textContent = `Salah (Pilih: ${userAns.toUpperCase()})`;
+            badge.className = "font-mono text-xs font-bold text-white bg-red-600 px-2.5 py-1 rounded";
+            if (navSlot && slotVal) {
+              navSlot.className = "ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-red-700 bg-red-600 text-white";
+              slotVal.textContent = `${userAns.toUpperCase()} ✕`;
+              slotVal.className = "font-mono text-xs font-bold text-white";
+            }
+          }
+
+          const labels = article.querySelectorAll(".option-label");
+          labels.forEach((lbl) => {
+            const optVal = lbl.getAttribute("data-option");
+            const radio = lbl.querySelector('input[type="radio"]');
+            const keyBox = lbl.querySelector(".opt-key");
+            radio.disabled = true;
+            lbl.classList.remove("border-forest", "bg-forest-muted/60", "hover:border-forest", "cursor-pointer");
+
+            if (optVal === correctAns) {
+              lbl.classList.add("border-emerald-600", "bg-emerald-50");
+              keyBox.className = "opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-emerald-600 border border-emerald-600 text-white flex items-center justify-center flex-shrink-0";
+            } else if (optVal === userAns && !isRight) {
+              lbl.classList.add("border-red-500", "bg-red-50");
+              keyBox.className = "opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-red-600 border border-red-600 text-white flex items-center justify-center flex-shrink-0";
+            }
+          });
+
+          if (det) {
+            const lockSpan = det.querySelector(".lock-indicator");
+            if (lockSpan) {
+              lockSpan.textContent = "Terbuka";
+              lockSpan.className = "lock-indicator font-mono text-[11px] text-forest font-bold";
+            }
+            det.open = true;
+          }
+        }
+
+        const finalScore = Math.round((correct / totalQuestions) * 100);
+        const passed = finalScore >= 70;
+        const durationFormatted = formatTime(secondsElapsed);
+
+        btnSubmit.textContent = "Lihat Ringkasan Nilai";
+
+        modalHeader.className = `px-6 py-5 text-white ${passed ? "bg-forest" : "bg-accent"}`;
+        modalTitle.textContent = passed ? "Kuis Selesai - Lulus" : "Kuis Selesai - Belum Lulus";
+        modalSubtitle.textContent = passed ? "Nilai memenuhi batas kelulusan (70)" : "Nilai di bawah batas minimal (70)";
+
+        modalNama.textContent = nama;
+        modalNim.textContent = nim;
+        modalKelas.textContent = kelas;
+        modalWaktu.textContent = durationFormatted;
+
+        scoreValue.textContent = finalScore;
+        correctCount.textContent = `${correct}/${totalQuestions}`;
+
+        modalDesc.textContent = passed
+          ? "Silakan tutup jendela ini untuk melihat koreksi jawaban dan pembahasan pada setiap kartu soal."
+          : "Pelajari pembahasan yang telah terbuka pada setiap kartu soal, lalu klik Ulangi untuk mencoba kembali.";
+
+        saveRiwayat({
+          nama,
+          nim,
+          kelas,
+          score: finalScore,
+          durasi: durationFormatted
+        });
+
+        modal.showModal();
+      });
+
+      function resetQuizState() {
+        isSubmitted = false;
+        stopTimer();
+        secondsElapsed = 0;
+        timerDisplay.textContent = "00:00";
+        timerDisplay.setAttribute("datetime", "PT0M0S");
+
+        progressBar.value = 0;
+        progressText.textContent = `0 / ${totalQuestions}`;
+        btnSubmit.textContent = "Kumpulkan Lembar Jawab";
+        hideWarning();
+
+        for (const qId of Object.keys(answerKey)) {
+          const article = document.getElementById(`soal-${qId}`);
+          const badge = document.getElementById(`badge-${qId}`);
+          const navSlot = document.querySelector(`[data-nav="${qId}"]`);
+          const slotVal = document.querySelector(`[data-slot-val="${qId}"]`);
+          const det = document.getElementById(`details-${qId}`);
+
+          badge.textContent = "Belum dijawab";
+          badge.className = "font-mono text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded";
+
+          if (navSlot && slotVal) {
+            navSlot.className = "ljk-slot flex items-center justify-between px-3 py-2 rounded-lg border-2 border-stone-300 bg-white hover:border-forest transition-colors";
+            slotVal.textContent = "-";
+            slotVal.className = "font-mono text-xs font-bold text-stone-400";
+          }
+
+          const labels = article.querySelectorAll(".option-label");
+          labels.forEach((lbl) => {
+            const radio = lbl.querySelector('input[type="radio"]');
+            const keyBox = lbl.querySelector(".opt-key");
+            radio.disabled = false;
+            radio.checked = false;
+            lbl.className = "option-label group flex items-start gap-3 p-3 bg-white border-2 border-stone-200 rounded-xl cursor-pointer hover:border-forest transition-all";
+            keyBox.className = "opt-key font-mono text-xs font-bold w-7 h-7 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 flex items-center justify-center flex-shrink-0 group-hover:border-forest";
+          });
+
+          if (det) {
+            det.open = false;
+            const lockSpan = det.querySelector(".lock-indicator");
+            if (lockSpan) {
+              lockSpan.textContent = "Terkunci";
+              lockSpan.className = "lock-indicator font-mono text-[11px] text-stone-500";
+            }
+          }
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      form.addEventListener("reset", () => {
+        setTimeout(resetQuizState, 10);
+      });
+
+      closeModalBtn.addEventListener("click", () => {
+        modal.close();
+        document.getElementById("daftar-soal").scrollIntoView({ behavior: "smooth" });
+      });
+
+      retryModalBtn.addEventListener("click", () => {
+        modal.close();
+        form.reset();
+      });
+
+      renderRiwayat();
+    });
+  </script>
+</body>
+</html>
